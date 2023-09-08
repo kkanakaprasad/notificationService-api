@@ -3,7 +3,7 @@ const BaseService = require("@baapcompany/core-api/services/base.service");
 const Handlebars = require("handlebars");
 let templates = require("../notificationTemplates/template")
 const sgMail = require("@sendgrid/mail");
-const ApiKey = "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"
+const ApiKey = "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"
 sgMail.setApiKey(ApiKey);
 
 class TemplteService extends BaseService {
@@ -23,15 +23,33 @@ class TemplteService extends BaseService {
     }
 
     async sendMail(templateData) {
-        if (templateData.templateName === "otpTemplate") {
+        if (templateData.templateName === "registrationOtp") {
             var subject = "OTP For Registration Of Eduffirm"
-            templates = templates.otpTemplate
+            templates = templates.registrationOtp
             const otpCode = await this.generateOTP()
             templateData.otpCode = otpCode
         }
-        else if(templateData.templateName === "welcomeTemplate"){
-            var subject = "Welcome Message From Eduffirm"
-            templates = templates.welcomeTemplate
+        else if (templateData.templateName === "ForgotOtp") {
+            var subject = `OTP For Reset Password`
+            templates = templates.ForgotOtp
+            const otpCode = await this.generateOTP()
+            templateData.otpCode = otpCode
+        }
+        else if (templateData.templateName === "tutorRejectsStudent") {
+            var subject = `Decline Mail From Tutor`
+            templates = templates.tutorRejectsStudent
+        }
+        else if (templateData.templateName === "invitationTemplate") {
+            var subject = `Invitation From Eduffirm`
+            templates = templates.invitationTemplate
+        }
+        else if (templateData.templateName === "paymentAlert") {
+            var subject = `Payment Related Information From Eduffirm`
+            templates = templates.paymentAlert
+        }
+        else if (templateData.templateName === "bookingAlert") {
+            var subject = `Booking Releted Alert From Eduffirm`
+            templates = templates.bookingAlert
         }
         const template = await Handlebars.compile(templates)
 
@@ -45,7 +63,6 @@ class TemplteService extends BaseService {
             },
             subject: subject,
             html: html,
-            text: 'Hello this is text'
         }
 
 
